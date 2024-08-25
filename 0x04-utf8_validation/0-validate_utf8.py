@@ -9,15 +9,20 @@ def validUTF8(data):
     """
     number_of_bytes = 0
 
-    # Iterate through each byte in the data list
+    # Masks to determine the type of byte
     for num in data:
         # Ensure num is a valid byte (0-255)
         if num > 255:
             return False
 
-        # If we are not in the middle of processing a multi-byte character
-        if number_of_bytes == 0:
-            # Determine how many bytes this character requires
+        # If we are in the middle of processing continuation bytes
+        if number_of_bytes > 0:
+            # Check if this is a valid continuation byte (should start with '10')
+            if (num >> 6) != 0b10:
+                return False
+            number_of_bytes -= 1
+        else:
+            # Determine how many bytes the character should have
             if (num >> 5) == 0b110:
                 number_of_bytes = 1
             elif (num >> 4) == 0b1110:
@@ -28,13 +33,6 @@ def validUTF8(data):
                 continue
             else:
                 return False
-        else:
-            # For continuation bytes, they must start with '10'
-            if (num >> 6) != 0b10:
-                return False
 
-        # Decrease the number of bytes to process
-        number_of_bytes -= 1
-
-    # If all bytes were properly processed, number_of_bytes should be 0
+    # After processing, there should be no remaining continuation bytes expected
     return number_of_bytes == 0
