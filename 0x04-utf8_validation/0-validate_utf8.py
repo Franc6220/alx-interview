@@ -14,7 +14,7 @@ def validUTF8(data):
         # Ensure num is a valid byte (0-255)
         if num > 255:
             return False
-
+        
         # If we are in the middle of processing continuation bytes
         if number_of_bytes > 0:
             # Check if this is a valid continuation byte (should start with '10')
@@ -35,4 +35,5 @@ def validUTF8(data):
                 return False
 
     # After processing, there should be no remaining continuation bytes expected
+    # If number_of_bytes is not zero here, it means we have an incomplete sequence
     return number_of_bytes == 0
