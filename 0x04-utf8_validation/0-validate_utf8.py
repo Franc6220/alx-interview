@@ -19,7 +19,7 @@ def validUTF8(data):
         byte = num & 0xFF
 
         # If this is the start of a new UTF-8 character
-        if number of bytes == 0:
+        if number_of_bytes == 0:
         # Determine the number of bytes in the character
         mask = 1 << 7
         while mask & byte:
