@@ -5,41 +5,36 @@ UTF-8 Validation
 
 def validUTF8(data):
     """
-    Determine if a given data set represents a valid UTF-8 encoding
+    Determine if a given data set represents a valid UTF-8 encoding.
     """
     number_of_bytes = 0
 
-    # Masks for checking the initial byte
-    mask1 = 1 << 7
-    mask2 = 1 << 6
-
-    # Iterate over each integer in the data list
+    # Iterate through each byte in the data list
     for num in data:
-        # Extract the last 8 bits
-        byte = num & 0xFF
+        # Ensure num is a valid byte (0-255)
+        if num > 255:
+            return False
 
-        # If this is the start of a new UTF-8 character
+        # If we are not in the middle of processing a multi-byte character
         if number_of_bytes == 0:
-        # Determine the number of bytes in the character
-        mask = 1 << 7
-        while mask & byte:
-            number_of_bytes += 1
-            mask = mask >> 1
-
-            # If number_of_bytes is 0, it's a 1-byte character
-            if number_of_bytes == 0:
+            # Determine how many bytes this character requires
+            if (num >> 5) == 0b110:
+                number_of_bytes = 1
+            elif (num >> 4) == 0b1110:
+                number_of_bytes = 2
+            elif (num >> 3) == 0b11110:
+                number_of_bytes = 3
+            elif (num >> 7) == 0:
                 continue
-
-            # UTF-8 characters can only be between 2 and 4 bytes long
-            if number_of_bytes == 1 or number_of_bytes > 4:
-                return False
             else:
-                # For multi-byte characters, check that the byte starts with "10"
-                if not (byte & mask1 and not (byte & mask2)):
-                    return False
+                return False
+        else:
+            # For continuation bytes, they must start with '10'
+            if (num >> 6) != 0b10:
+                return False
 
-                # Decrease the number of bytes left to process
-                number_of_bytes -= 1
+        # Decrease the number of bytes to process
+        number_of_bytes -= 1
 
-                # If all characters were successfully processed, return True
-                return number_of_bytes == 0
+    # If all bytes were properly processed, number_of_bytes should be 0
+    return number_of_bytes == 0
