@@ -52,7 +52,7 @@ def nqueens(n):
     board = [[0 for _ in range(n)] for _ in range(n)]
     solutions = []
     solve_nqueens(board, 0, n, solutions)
-    for solutions in solutions:
+    for solution in solutions:
         print(solution)
 
 if __name__ == "__main__":
