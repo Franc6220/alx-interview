@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+""" 
+Maria and Ben are playing a game. 
+"""
 
 def sieve_of_eratosthenes(n):
     """ Returns a list where True means the index is prime """
