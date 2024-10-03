@@ -4,10 +4,10 @@ def sieve_of_eratosthenes(n):
     """ Returns a list where True means the index is prime """
     primes = [True] * (n + 1)
     primes[0] = primes[1] = False
-    for p in range(2, int(n**0.5)  + 1):
-        if primes[p]:
-            for i in range(p * p, n + 1, p):
-                primes[i] = False
+    for i in range(2, int(n ** 0.5)  + 1):
+        if primes[i]:
+            for j in range(i * i, n + 1, i):
+                primes[j] = False
     return primes
 
 def isWinner(x, nums):
@@ -38,10 +38,13 @@ def isWinner(x, nums):
 
     # Simulate each round
     for n in nums:
-        if prime_count[n] % 2 == 0:
+        if n == 1:
             ben_wins += 1
         else:
-            maria_wins += 1
+            if prime_count[n] % 2 == 0:
+                ben_wins += 1
+            else:
+                maria_wins += 1
 
     # Determine the overall winner
     if maria_wins > ben_wins:
